@@ -1,0 +1,17 @@
+---
+description: JavaScript documentation and control-flow conventions
+globs: "**/*.js"
+alwaysApply: false
+---
+
+# JavaScript Style
+
+- Add JSDoc where it clarifies a public API, exported symbol, callback contract, object shape, or non-obvious type. Keep it accurate when code changes.
+- Do not add narrative, section, restatement, or implementation comments. Use clear names and small functions instead.
+- `TODO` comments are allowed for concrete follow-up work. Other comments require a specific reason that cannot be expressed clearly in code or JSDoc.
+- Prefer named function declarations for reusable functions.
+- Use an arrow function only when it produces less code without reducing clarity, such as a short inline callback.
+- Prefer `async`/`await` to `.then()`, `.catch()`, or `.finally()` chains when both approaches are practical.
+- Always put braces around `if`, `else`, loops, and other control-flow bodies, including one-line bodies.
+- Never use nested ternary expressions. Use `if`/`else` or extract a function.
+- Let ESLint and Prettier handle conventions they can enforce. Do not manually format code against their output or duplicate their rules here.
