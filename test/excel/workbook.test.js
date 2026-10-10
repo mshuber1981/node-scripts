@@ -45,6 +45,40 @@ describe('workbooks', () => {
     expect(rows[0].When).toEqual(when);
   });
 
+  it('styles hyperlink cells as blue underlined links', async () => {
+    const filePath = join(directory, 'links.xlsx');
+
+    await writeWorkbook(filePath, [
+      {
+        name: 'Links',
+        columns: [
+          { header: 'Name', key: 'name', width: 24 },
+          { header: 'Count', key: 'count', width: 12 },
+        ],
+        rows: [
+          {
+            name: { text: 'Questions', hyperlink: 'https://example.com/questions' },
+            count: 3,
+          },
+        ],
+      },
+    ]);
+
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+    const worksheet = workbook.getWorksheet('Links');
+    const link = worksheet.getCell('A2');
+    const plain = worksheet.getCell('B2');
+
+    expect(link.value).toEqual({
+      text: 'Questions',
+      hyperlink: 'https://example.com/questions',
+    });
+    expect(link.font).toMatchObject({ color: { argb: 'FF0563C1' }, underline: true });
+    expect(plain.font).toBeUndefined();
+    expect(worksheet.getRow(1).font).toMatchObject({ bold: true });
+  });
+
   it('returns the cached result of a formula cell', async () => {
     const filePath = join(directory, 'formula.xlsx');
     await writeWorkbook(filePath, [

@@ -12,7 +12,7 @@ npm test
 npm run check
 ```
 
-`check` runs Prettier, ESLint, and Jest.
+`check` runs Prettier, ESLint, and Jest. Pull requests and pushes to `main` run that same check in GitHub Actions, plus `npm audit` for high and critical findings.
 
 | Script                   | Purpose                                        |
 | ------------------------ | ---------------------------------------------- |
@@ -72,7 +72,7 @@ Paths appended to `prefixUrl` do not start with `/`. Override `timeoutMs`, `retr
 
 ## Excel
 
-[`exceljs`](https://github.com/exceljs/exceljs) reads and writes workbooks. `writeWorkbook` creates parent directories, freezes the header row, and turns on a filter. `readSheet` returns objects keyed by the header text and skips blank rows.
+[`exceljs`](https://github.com/exceljs/exceljs) reads and writes workbooks. `writeWorkbook` creates parent directories, freezes the header row, and turns on a filter. A cell value of `{ text, hyperlink }` is stored as a link and shown in blue with an underline. `readSheet` returns row objects keyed by the header text, uses the display text for link cells, and skips blank rows.
 
 ```js
 import { readSheet, writeWorkbook } from '../src/index.js';

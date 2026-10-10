@@ -10,10 +10,16 @@ import ExcelJS from 'exceljs';
  */
 
 /**
+ * @typedef {object} HyperlinkValue
+ * @property {string} text Display text.
+ * @property {string} hyperlink Link target. Use `#'Sheet'!A1` for a cell in this workbook.
+ */
+
+/**
  * @typedef {object} ReportSheet
  * @property {string} name
  * @property {ReportColumn[]} columns
- * @property {Record<string, unknown>[]} [rows]
+ * @property {Record<string, unknown>[]} [rows] A cell may be a {@link HyperlinkValue}.
  */
 
 /**
@@ -68,8 +74,38 @@ function resolveWorksheet(workbook, sheet) {
 }
 
 /**
+ * @param {unknown} value
+ * @returns {value is HyperlinkValue}
+ */
+function isHyperlink(value) {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    'hyperlink' in value &&
+    typeof value.hyperlink === 'string' &&
+    value.hyperlink.length > 0
+  );
+}
+
+/**
+ * @param {import('exceljs').Worksheet} worksheet
+ * @param {number} columnCount
+ */
+function styleHyperlinks(worksheet, columnCount) {
+  for (let rowNumber = 2; rowNumber <= worksheet.rowCount; rowNumber += 1) {
+    const row = worksheet.getRow(rowNumber);
+    for (let column = 1; column <= columnCount; column += 1) {
+      const cell = row.getCell(column);
+      if (isHyperlink(cell.value)) {
+        cell.font = { color: { argb: 'FF0563C1' }, underline: true };
+      }
+    }
+  }
+}
+
+/**
  * Write a workbook of tabular sheets. The header row is bold, frozen, and filtered.
- * Parent directories are created when they are missing.
+ * Hyperlink cells are blue and underlined. Parent directories are created when they are missing.
  *
  * @param {string} filePath
  * @param {ReportSheet[]} sheets
@@ -94,6 +130,7 @@ export async function writeWorkbook(filePath, sheets) {
     const worksheet = workbook.addWorksheet(sheet.name);
     worksheet.columns = sheet.columns;
     worksheet.addRows(sheet.rows ?? []);
+    styleHyperlinks(worksheet, sheet.columns.length);
     worksheet.getRow(1).font = { bold: true };
     worksheet.views = [{ state: 'frozen', ySplit: 1 }];
     worksheet.autoFilter = {
