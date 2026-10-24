@@ -122,6 +122,7 @@ describe('promptForTabularFile', () => {
     const result = await promptForTabularFile({
       cwd: '/tmp',
       existsSync: (path) => existing.has(path),
+      clear: () => {},
       log: (message) => {
         logs.push(message);
       },

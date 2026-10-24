@@ -50,6 +50,7 @@ describe('promptForSavePath', () => {
 
     const path = await promptForSavePath({
       cwd: '/tmp',
+      clear: () => {},
       log: (message) => {
         logs.push(message);
       },

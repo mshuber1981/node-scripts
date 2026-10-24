@@ -84,10 +84,12 @@ function buildPrompt(options = {}) {
  * @param {string} [options.cwd]
  * @param {(prompt: string) => Promise<string>} [options.question]
  * @param {(message?: string) => void} [options.log]
+ * @param {() => void} [options.clear] Defaults to `console.clear`. Called after a retry acknowledgment.
  * @returns {Promise<string>} Absolute path
  */
 export async function promptForSavePath(options = {}) {
   const log = options.log ?? console.log;
+  const clear = options.clear ?? console.clear;
   const questionOptions = options.question ? { question: options.question } : {};
 
   for (;;) {
@@ -103,5 +105,6 @@ export async function promptForSavePath(options = {}) {
 
     log(result.reason);
     await ask('Press Enter to try again (or Ctrl+C to cancel)', questionOptions);
+    clear();
   }
 }

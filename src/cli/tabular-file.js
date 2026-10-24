@@ -143,10 +143,12 @@ function buildPrompt(options = {}) {
  * @param {(path: string) => boolean} [options.existsSync]
  * @param {(prompt: string) => Promise<string>} [options.question]
  * @param {(message?: string) => void} [options.log]
+ * @param {() => void} [options.clear] Defaults to `console.clear`. Called after a retry acknowledgment.
  * @returns {Promise<ResolvedTabularFile>}
  */
 export async function promptForTabularFile(options = {}) {
   const log = options.log ?? console.log;
+  const clear = options.clear ?? console.clear;
   const questionOptions = options.question ? { question: options.question } : {};
 
   for (;;) {
@@ -163,5 +165,6 @@ export async function promptForTabularFile(options = {}) {
 
     log(result.reason);
     await ask('Press Enter to try again (or Ctrl+C to cancel)', questionOptions);
+    clear();
   }
 }
