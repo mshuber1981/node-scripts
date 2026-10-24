@@ -6,8 +6,10 @@ alwaysApply: true
 # Project layout
 
 - Shared helpers live in `src/` and are exported from `src/index.js`. Committed examples live in `scripts/`.
+- Interactive CLI prompts (tabular input, save paths) live under `src/cli/`.
+- Local `.env` loading for scripts uses `loadEnvFile` from `src/env/`.
 - Task scripts live in `work/`. That directory is gitignored. Do not commit it, and do not copy its Vault paths or URLs into the repo.
 - Read secrets with `readVaultValues` or `createVaultServiceClient`. Errors may name paths and fields. Do not print secret values, access tokens, or client secrets.
-- A script passes Vault locators such as `{ path, field }` for `tokenUrl`, `serviceUrl`, `clientId`, and `clientSecret`.
+- A script passes Vault locators such as `{ path, field }` for `tokenUrl`, `serviceUrl`, `clientId`, and `clientSecret`. Call `requireVaultField(locator, name)` to reject a blank locator before reading Vault.
 - For the Microsoft Entra v2 token endpoint, pass `scope: '{clientId}/.default'` unless that script needs a different resource. `{clientId}` is replaced with the client id read from Vault.
 - Paths passed to the HTTP client are appended to the service URL and must not start with `/`.

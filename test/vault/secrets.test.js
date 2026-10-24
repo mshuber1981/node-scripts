@@ -3,6 +3,7 @@ import {
   assertVaultReady,
   listVaultFields,
   readVaultValues,
+  requireVaultField,
   runVault,
   VaultCommandError,
   VaultError,
@@ -218,6 +219,26 @@ describe('listVaultFields', () => {
     const fields = await listVaultFields('secret/reporting', { run });
     expect(fields).toEqual(['client_id', 'client_secret']);
     expect(fields.join(' ')).not.toContain('super-secret');
+  });
+});
+
+describe('requireVaultField', () => {
+  it('accepts a locator with a path and field', () => {
+    expect(() =>
+      requireVaultField({ path: 'secret/reporting', field: 'client_id' }, 'clientId'),
+    ).not.toThrow();
+  });
+
+  it('rejects a missing locator or a blank path or field', () => {
+    expect(() => requireVaultField(undefined, 'tokenUrl')).toThrow(
+      'tokenUrl needs a non-empty path and field',
+    );
+    expect(() => requireVaultField({ path: '  ', field: 'client_id' }, 'clientId')).toThrow(
+      TypeError,
+    );
+    expect(() =>
+      requireVaultField({ path: 'secret/reporting', field: '' }, 'clientSecret'),
+    ).toThrow('clientSecret needs a non-empty path and field');
   });
 });
 

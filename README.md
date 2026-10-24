@@ -24,7 +24,7 @@ npm run check
 | `npm run example:report` | Write `output/report.xlsx`                     |
 | `npm run check:vault`    | Confirm Vault, or read paths passed after `--` |
 
-Shared helpers live in `src/`. Scripts that should be committed live in `scripts/`. Scripts for a specific task live in `work/`, which Git ignores. Each work script names the Vault fields it needs. `node work/fetch.js` is a local starting point.
+Shared helpers live in `src/`. Scripts that should be committed live in `scripts/`. Scripts for a specific task live in `work/`, which Git ignores. Each work script names the Vault fields it needs.
 
 ## Vault
 
@@ -50,7 +50,7 @@ The first command only checks the CLI and the login. A path checks that the secr
 
 Client credentials are read from Vault, then exchanged at a token endpoint with `grant_type=client_credentials`. The token is cached and refreshed when it is within 60 seconds of expiry. A later `401` refreshes once and sends the request again.
 
-A script supplies the Vault field for each value it needs. The token URL can stay the same across scripts, but it still comes from Vault rather than from this repo. Another script can point `clientId`, `clientSecret`, and `serviceUrl` at different fields.
+A script supplies the Vault field for each value it needs. `requireVaultField(locator, name)` rejects a blank `{ path, field }` before Vault is called. The token URL can stay the same across scripts, but it still comes from Vault rather than from this repo. Another script can point `clientId`, `clientSecret`, and `serviceUrl` at different fields.
 
 ```js
 import { createVaultServiceClient } from '../src/index.js';

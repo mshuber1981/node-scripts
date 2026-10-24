@@ -210,6 +210,23 @@ function assertSafeField(field) {
  */
 
 /**
+ * @param {VaultField | undefined} locator
+ * @param {string} name Name used in the error, such as `tokenUrl`.
+ */
+export function requireVaultField(locator, name) {
+  const path = locator?.path;
+  const field = locator?.field;
+  if (
+    typeof path !== 'string' ||
+    typeof field !== 'string' ||
+    path.trim() === '' ||
+    field.trim() === ''
+  ) {
+    throw new TypeError(`${name} needs a non-empty path and field`);
+  }
+}
+
+/**
  * @param {Record<string, VaultField>} requests
  * @returns {{ name: string, path: string, field: string }[]}
  */
