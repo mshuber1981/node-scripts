@@ -7,3 +7,4 @@ work/
 .env.*
 !.env.example
 npm-debug.log*
+llm-scratch/
