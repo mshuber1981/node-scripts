@@ -54,9 +54,7 @@ export async function promptForTabularInput(options) {
       loaded = await readFile(file);
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error);
-      log(
-        `Could not read that file: ${reason}\nExpected columns: ${requiredColumns.join(', ')}.`,
-      );
+      log(`Could not read that file: ${reason}\nExpected columns: ${requiredColumns.join(', ')}.`);
       await ask('Press Enter to choose another file (or Ctrl+C to cancel)', questionOptions);
       clear();
       continue;
